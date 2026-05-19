@@ -12,7 +12,7 @@ import {
 // ==========================================
 // URL REAL DO SEU GOOGLE APPS SCRIPT
 // ==========================================
-const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzi6Du1nekaCpAsD_2kDO8sZmDGKWsfB6GTWAd3JwVwqUtfsdBNeaPe1w_aYfILUBNQyw/exec";
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxIiGPPcGkNgIygSfJ30DvVhezX-r2P9opb0LgLfrhaCKyuu5dsSlYiju782t3FznbE/exec";
 
 export default function Agendamento() {
   const navigate = useNavigate();
