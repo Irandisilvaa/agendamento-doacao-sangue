@@ -1,0 +1,10 @@
+@import "tailwindcss";
+
+/* Criando a nossa cor customizada direto no CSS */
+@theme {
+  --color-hemose-red: #cc0000;
+}
+
+body {
+  background-color: var(--color-gray-50);
+}
