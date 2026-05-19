@@ -14,11 +14,22 @@
 
   import { useEffect, useRef, useState } from "react";
   import imagemCelulas from "../assets/fundo-depoimento.svg";
-  // ==========================================
-  // LOGOS
-  // ==========================================
-  const logoCampanha = "src/assets/logo-campanha.svg";
-  const logoHemose = "src/assets/logo-hemose.svg";
+ 
+
+import imagemCelulas from "../assets/fundo-depoimento.svg";
+import logoCampanhaImg from "../assets/logo-campanha.svg";
+import logoHemoseImg from "../assets/logo-hemose.svg";
+
+import bolsaImg from "../assets/bolsa.svg";
+import bracoImg from "../assets/braco.svg";
+
+import foto1Img from "../assets/foto1.svg";
+import foto2Img from "../assets/foto2.svg";
+import foto3Img from "../assets/foto3.svg";
+import foto4Img from "../assets/foto4.svg";
+
+import fotoJoseImg from "../assets/jose-lucas.svg";
+import fotoCamillaImg from "../assets/camilla.svg";
 
   // ==========================================
   // BANNERS DO TOPO
@@ -28,31 +39,26 @@
       text: "Agora você pode",
       mainText: "AGENDAR ON-LINE",
       subText: "a sua doação de sangue",
-      image: "src/assets/bolsa.svg",
+      image: bolsaImg,
     },
     {
       text: "Você pode ser",
       mainText: "O TIPO CERTO DE ALGUÉM",
       subText: "Doe sangue, salve vidas!",
-      image: "src/assets/braco.svg",
+      image: bracoImg,
     },
   ];
 
-  // ==========================================
-  // GALERIA SOBRE A CAMPANHA
-  // ==========================================
   const galeriaCampanha = {
-    foto1: "src/assets/foto1.svg",
-    foto2: "src/assets/foto2.svg",
-    foto3: "src/assets/foto3.svg",
-    foto4: "src/assets/foto4.svg",
-  };
+  foto1: foto1Img,
+  foto2: foto2Img,
+  foto3: foto3Img,
+  foto4: foto4Img,
+};
 
-  // ==========================================
-  // FOTOS DOS DEPOIMENTOS
-  // ==========================================
-  const fotoJose = "src/assets/jose-lucas.svg";
-  const fotoCamilla = "src/assets/camilla.svg";
+const fotoJose = fotoJoseImg;
+const fotoCamilla = fotoCamillaImg;
+
 
   // ==========================================
   // LOOP DOS BANNERS
