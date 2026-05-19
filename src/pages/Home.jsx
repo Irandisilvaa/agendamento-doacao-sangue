@@ -13,12 +13,11 @@
   } from "lucide-react";
 
   import { useEffect, useRef, useState } from "react";
-  import imagemCelulas from "../assets/fundo-depoimento.svg";
  
 
 import imagemCelulas from "../assets/fundo-depoimento.svg";
-import logoCampanhaImg from "../assets/logo-campanha.svg";
-import logoHemoseImg from "../assets/logo-hemose.svg";
+import logoCampanha from "../assets/logo-campanha.svg";
+import logoHemose from "../assets/logo-hemose.svg";
 
 import bolsaImg from "../assets/bolsa.svg";
 import bracoImg from "../assets/braco.svg";
