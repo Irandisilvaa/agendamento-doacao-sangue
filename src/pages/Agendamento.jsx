@@ -119,27 +119,6 @@ export default function Agendamento() {
     }
   };
 
-  // Função para gerar e baixar o PDF do comprovante
-  const baixarComprovante = async () => {
-    const element = document.getElementById("comprovante-pdf");
-    if (!element) return;
-
-    try {
-      const canvas = await html2canvas(element, { scale: 2 });
-      const imgData = canvas.toDataURL("image/png");
-      const pdf = new jsPDF("p", "mm", "a4");
-      
-      const pdfWidth = pdf.internal.pageSize.getWidth();
-      const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
-      
-      pdf.addImage(imgData, "PNG", 0, 10, pdfWidth, pdfHeight);
-      pdf.save(`Comprovante_Doacao_${formData.nome.split(" ")[0]}.pdf`);
-    } catch (error) {
-      console.error("Erro ao gerar PDF:", error);
-      alert("Não foi possível gerar o PDF. Tente novamente.");
-    }
-  };
-
   return (
     <div className="min-h-screen bg-gray-50 font-sans text-gray-800 pb-12">
       <header className="bg-gradient-to-r from-red-900 to-red-800 text-white p-4 shadow-md flex items-center gap-4">
@@ -427,7 +406,6 @@ export default function Agendamento() {
               </p>
             </div>
 
-            {/* Este é o container que o html2canvas vai "tirar foto" */}
             <div 
               id="comprovante-pdf" 
               className="bg-white p-8 rounded-b-2xl shadow-xl w-full max-w-lg relative"
@@ -461,24 +439,16 @@ export default function Agendamento() {
 
                 <div className="bg-gray-50 border border-gray-100 p-4 rounded-lg mt-4">
                   <p className="text-xs text-gray-500 leading-relaxed font-medium text-center">
-                    Apresente este comprovante (impresso ou no celular) e um <strong>documento oficial com foto</strong> no dia da doação.
+                    Tire um print desta tela para apresentar junto com um <strong>documento oficial com foto</strong> no dia da doação.
                   </p>
                 </div>
               </div>
             </div>
 
-            <div className="flex flex-col sm:flex-row gap-4 justify-center mt-8 w-full max-w-lg">
-              <button 
-                onClick={baixarComprovante}
-                className="flex-1 bg-gray-800 text-white font-bold py-4 px-6 rounded-xl shadow-lg hover:bg-gray-900 transition-colors flex items-center justify-center gap-2"
-              >
-                <Download size={20} />
-                Baixar PDF
-              </button>
-
+            <div className="flex w-full max-w-lg mt-8">
               <button 
                 onClick={() => navigate("/")}
-                className="flex-1 bg-red-700 text-white font-bold py-4 px-6 rounded-xl shadow-lg hover:bg-red-800 transition-colors flex items-center justify-center"
+                className="w-full bg-red-700 text-white font-bold py-4 px-6 rounded-xl shadow-lg hover:bg-red-800 transition-colors flex items-center justify-center"
               >
                 Voltar ao Início
               </button>
