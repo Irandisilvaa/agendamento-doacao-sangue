@@ -68,109 +68,164 @@ const fotoCamilla = fotoCamillaImg;
     ...bannersData,
   ];
 
-  export default function Home() {
-    const navigate = useNavigate();
+export default function Home() {
+  const navigate = useNavigate();
 
-    const loopRef = useRef(null);
-    const animationRef = useRef(null);
+  const loopRef = useRef(null);
+  const animationRef = useRef(null);
 
-    const [openFaq, setOpenFaq] = useState(null);
+  const [openFaq, setOpenFaq] = useState(null);
 
-    useEffect(() => {
-      const loopContainer = loopRef.current;
+  // NOVO STATE
+  const [hideHeaderLogos, setHideHeaderLogos] =
+    useState(false);
 
-      let position = 0;
+  // ==========================================
+  // LOOP DOS BANNERS
+  // ==========================================
+  useEffect(() => {
+    const loopContainer = loopRef.current;
 
-      const scroll = () => {
-        position += 1.2;
+    let position = 0;
 
-        const maxScroll =
-          window.innerWidth * bannersData.length;
+    const scroll = () => {
+      position += 1.2;
 
-        if (position >= maxScroll) {
-          position = 0;
-        }
+      const maxScroll =
+        window.innerWidth *
+        bannersData.length;
 
-        if (loopContainer) {
-          loopContainer.style.transform = `translateX(-${position}px)`;
-        }
+      if (position >= maxScroll) {
+        position = 0;
+      }
 
-        animationRef.current =
-          requestAnimationFrame(scroll);
-      };
+      if (loopContainer) {
+        loopContainer.style.transform = `translateX(-${position}px)`;
+      }
 
       animationRef.current =
         requestAnimationFrame(scroll);
-
-      return () => {
-        if (animationRef.current) {
-          cancelAnimationFrame(
-            animationRef.current
-          );
-        }
-      };
-    }, []);
-
-    const toggleFaq = (index) => {
-      setOpenFaq(
-        openFaq === index ? null : index
-      );
     };
 
-    return (
-      <div className="min-h-screen bg-gray-50 font-sans overflow-x-hidden scroll-smooth">
-        {/* ==========================================
-            HEADER
-        ========================================== */}
-<header className="fixed top-0 left-0 w-full p-4 flex justify-between items-center bg-gradient-to-b from-black/50 to-transparent z-50 px-6 md:px-12">
-  <div className="flex items-center gap-4">
-    
-    {/* LOGOS */}
-    <div className="flex items-center gap-3">
-      
-      <img
-        src={logoCampanha}
-        alt="Logo Campanha"
-        className="w-14 h-14 object-contain"
-      />
+    animationRef.current =
+      requestAnimationFrame(scroll);
 
-      <img
-        src={logoHemose}
-        alt="Logo Hemose"
-        className="w-40 h-16 object-contain"
-      />
-    </div>
+    return () => {
+      if (animationRef.current) {
+        cancelAnimationFrame(
+          animationRef.current
+        );
+      }
+    };
+  }, []);
 
-  
-  </div>
+  // NOVO USEEFFECT
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 120) {
+        setHideHeaderLogos(true);
+      } else {
+        setHideHeaderLogos(false);
+      }
+    };
 
-  <nav className="hidden md:flex gap-6 font-semibold text-white text-sm">
-    <a href="#" className="hover:text-red-200 transition">
-      Início
-    </a>
+    window.addEventListener(
+      "scroll",
+      handleScroll
+    );
 
-    <a
-      href="#perguntas"
-      className="hover:text-red-200 transition"
-    >
-      Quem pode doar
-    </a>
+    return () => {
+      window.removeEventListener(
+        "scroll",
+        handleScroll
+      );
+    };
+  }, []);
 
-    <a
-      href="#sobre"
-      className="hover:text-red-200 transition"
-    >
-      O Evento
-    </a>
+  const toggleFaq = (index) => {
+    setOpenFaq(
+      openFaq === index ? null : index
+    );
+  };
 
-    <a
-      href="#contato"
-      className="hover:text-red-200 transition"
-    >
-      Contato
-    </a>
-  </nav>
-</header>
+  return (
+    <div className="min-h-screen bg-gray-50 font-sans overflow-x-hidden scroll-smooth">
+
+      {/* ==========================================
+          HEADER
+      ========================================== */}
+
+      <header
+        className={`
+          fixed top-0 left-0 w-full p-4
+          flex justify-between items-center
+          z-50 px-6 md:px-12
+          transition-all duration-500
+          ${
+            hideHeaderLogos
+              ? "bg-red-900/95 shadow-xl backdrop-blur-md"
+              : "bg-gradient-to-b from-black/50 to-transparent"
+          }
+        `}
+      >
+        <div className="flex items-center gap-4">
+
+          {/* LOGOS */}
+          <div
+            className={`
+              flex items-center gap-3
+              transition-all duration-500
+              ${
+                hideHeaderLogos
+                  ? "opacity-0 -translate-y-10 scale-75"
+                  : "opacity-100 translate-y-0 scale-100"
+              }
+            `}
+          >
+            <img
+              src={logoCampanha}
+              alt="Logo Campanha"
+              className="w-14 h-14 object-contain"
+            />
+
+            <img
+              src={logoHemose}
+              alt="Logo Hemose"
+              className="w-40 h-16 object-contain"
+            />
+          </div>
+        </div>
+
+        <nav className="hidden md:flex gap-6 font-semibold text-white text-sm">
+          <a
+            href="#"
+            className="hover:text-red-200 transition"
+          >
+            Início
+          </a>
+
+          <a
+            href="#perguntas"
+            className="hover:text-red-200 transition"
+          >
+            Quem pode doar
+          </a>
+
+          <a
+            href="#sobre"
+            className="hover:text-red-200 transition"
+          >
+            O Evento
+          </a>
+
+          <a
+            href="#contato"
+            className="hover:text-red-200 transition"
+          >
+            Contato
+          </a>
+        </nav>
+      </header>
 
         {/* ==========================================
             HERO
