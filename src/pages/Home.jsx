@@ -157,7 +157,7 @@ export default function Home() {
 
       <header
         className={`
-          fixed top-0 left-0 w-full p-4
+          fixed top-0 left-0 w-full py-1
           flex justify-between items-center
           z-50 px-6 md:px-12
           transition-all duration-500
