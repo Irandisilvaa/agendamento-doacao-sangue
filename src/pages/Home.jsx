@@ -139,8 +139,8 @@ export default function Home() {
           transition-all duration-500
           ${
             hideHeaderLogos
-              ? "bg-red-900/95 shadow-xl backdrop-blur-md"
-              : "bg-gradient-to-b from-black/70 to-transparent"
+              ? "-translate-y-full opacity-0 pointer-events-none"
+              : "translate-y-0 opacity-100 bg-gradient-to-b from-black/70 to-transparent"
           }
         `}
       >
