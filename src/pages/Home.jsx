@@ -18,6 +18,8 @@
 import imagemCelulas from "../assets/fundo-depoimento.svg";
 import logoCampanha from "../assets/logo-campanha.svg";
 import logoHemose from "../assets/logo-hemose.svg";
+import fotoIrandi from "../assets/irandi.png";
+import fotoCamillaDev from "../assets/camilla-dev.png";
 
 import bolsaImg from "../assets/bolsa.svg";
 import bracoImg from "../assets/braco.svg";
@@ -652,13 +654,14 @@ export default function Home() {
     </div>
   </section>
 
-        {/* ==========================================
+{/* ==========================================
             RODAPÉ
         ========================================== */}
         <section
           id="contato"
           className="bg-[#4c0505] text-white pt-12 pb-8 px-6 md:px-12"
         >
+          {/* GRID COM AS DUAS COLUNAS */}
           <div className="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-12 text-xs md:text-sm">
             {/* COLUNA 1 */}
             <div className="space-y-4">
@@ -691,23 +694,16 @@ export default function Home() {
               <div className="space-y-2">
                 <div className="flex items-center gap-3">
                   <Mail size={16} />
-
-                  <span>
-                    hematoufs2017@hotmail.com
-                  </span>
+                  <span>hematoufs2017@hotmail.com</span>
                 </div>
 
                 <div className="flex items-center gap-3">
                   <AtSign size={16} />
-
-                  <span>
-                    @hematologia.ufs
-                  </span>
+                  <span>@hematologia.ufs</span>
                 </div>
 
                 <div className="flex items-start gap-3">
-                    <MapPin size={16} className="shrink-0 mt-1" />
-
+                  <MapPin size={16} className="shrink-0 mt-1" />
                   <span>
                     Grupo de Pesquisa em Hematologia – Departamento de Farmácia (DFA-UFS), Av. Marechal Rondon, s/n, Jardim Rosa Elze, São Cristóvão/SE.
                   </span>
@@ -750,23 +746,16 @@ export default function Home() {
               <div className="space-y-2">
                 <div className="flex items-center gap-3">
                   <Mail size={16} />
-
-                  <span>
-                    ouvidoria.fsph@fsph.se.gov.br
-                  </span>
+                  <span>ouvidoria.fsph@fsph.se.gov.br</span>
                 </div>
 
                 <div className="flex items-center gap-3">
                   <Phone size={16} />
-
-                  <span>
-                    +55 79 3234-6010
-                  </span>
+                  <span>+55 79 3234-6010</span>
                 </div>
 
                 <div className="flex items-start gap-3">
                   <MapPin size={16} />
-
                   <span>
                     Av. Prof. José Bonifácio
                     Fortes Neto, 400,
@@ -774,6 +763,59 @@ export default function Home() {
                   </span>
                 </div>
               </div>
+            </div>
+          </div> {/* <--- FECHO DO GRID AQUI (Foi isto que mudou de sítio) */}
+
+          {/* CRÉDITOS - Agora livres e centrados */}
+          <div className="w-full max-w-5xl mx-auto mt-12 pt-8 border-t border-white/10 flex flex-col items-center justify-center">
+            <div className="flex flex-col md:flex-row items-center justify-center gap-6 md:gap-8 w-full">
+
+              {/* IRANDI */}
+              <div className="flex items-center gap-4 bg-white/5 px-6 py-4 rounded-2xl backdrop-blur-sm border border-white/10 w-full max-w-[340px] shrink-0">
+                <div className="w-16 h-16 rounded-full overflow-hidden border-2 border-white/20 shrink-0">
+                  <img
+                    src={fotoIrandi}
+                    alt="Irandi Silva"
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+
+                <div className="leading-tight text-left">
+                  <p className="text-xs text-white/50 uppercase tracking-wider">
+                    Engenharia de Computação
+                  </p>
+                  <h3 className="font-black text-lg text-white">
+                    Irandi Silva
+                  </h3>
+                  <p className="text-sm text-white/70">
+                    Desenvolvimento da página
+                  </p>
+                </div>
+              </div>
+
+              {/* CAMILLA */}
+              <div className="flex items-center gap-4 bg-white/5 px-6 py-4 rounded-2xl backdrop-blur-sm border border-white/10 w-full max-w-[340px] shrink-0">
+                <div className="w-16 h-16 rounded-full overflow-hidden border-2 border-white/20 shrink-0">
+                  <img
+                    src={fotoCamillaDev}
+                    alt="Camilla Menezes"
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+
+                <div className="leading-tight text-left">
+                  <p className="text-xs text-white/50 uppercase tracking-wider">
+                    Farmácia
+                  </p>
+                  <h3 className="font-black text-lg text-white">
+                    Camilla Menezes
+                  </h3>
+                  <p className="text-sm text-white/70">
+                    Design UX e UI da plataforma
+                  </p>
+                </div>
+              </div>
+
             </div>
           </div>
         </section>
@@ -786,4 +828,4 @@ export default function Home() {
         </footer>
       </div>
     );
-  }
+}
