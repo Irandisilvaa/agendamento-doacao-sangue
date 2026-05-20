@@ -89,7 +89,7 @@ export default function Home() {
     const loopContainer = loopRef.current;
     let position = 0;
     const scroll = () => {
-      position += 3;
+      position += 2;
       const maxScroll = window.innerWidth * bannersData.length;
       if (position >= maxScroll) {
         position = 0;
