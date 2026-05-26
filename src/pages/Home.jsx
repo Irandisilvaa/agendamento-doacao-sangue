@@ -430,7 +430,7 @@ export default function Home() {
             </div>
             <div className="space-y-4 text-sm md:text-base leading-relaxed text-gray-200">
               <p>
-                A campanha “O Amor Está na Veia” nasceu no Grupo de Pesquisa em Hematologia da Universidade Federal de Sergipe com o objective de incentivar a doação de sangue e o cadastro de doadores 
+                A campanha “O Amor Está na Veia” nasceu no Grupo de Pesquisa em Hematologia da Universidade Federal de Sergipe com o objetivo de incentivar a doação de sangue e o cadastro de doadores 
                 de medula óssea, aproximando a universidade da sociedade por meio da solidariedade.
               </p>
               <p>
@@ -588,7 +588,7 @@ export default function Home() {
             <div className="space-y-2">
               <div className="flex items-center gap-3">
                 <Mail size={16} />
-                <span>hematoufs2017@hotmail.com</span>
+                <span>hematox2017@hotmail.com</span>
               </div>
               <div className="flex items-center gap-3">
                 <AtSign size={16} />
