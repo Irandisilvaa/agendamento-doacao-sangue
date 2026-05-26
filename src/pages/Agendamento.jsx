@@ -11,13 +11,15 @@ import {
   Loader2,
   FileText,
   Download,
-  AlertCircle
+  AlertCircle,
+  Phone,
+  Clock4
 } from "lucide-react";
 
 // ==========================================
 // URL REAL DO SEU GOOGLE APPS SCRIPT
 // ==========================================
-const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxIiGPPcGkNgIygSfJ30DvVhezX-r2P9opb0LgLfrhaCKyuu5dsSlYiju782t3FznbE/exec";
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbykZ9i3fWicSdh8eAnC1t-9EsGl5ph5UtSVWCT_82QeZ0FfHprEVxtNYP-hbG3WaE51/exec";
 
 export default function Agendamento() {
   const navigate = useNavigate();
@@ -30,15 +32,18 @@ export default function Agendamento() {
   const [planilhaData, setPlanilhaData] = useState({});
   const [diasDisponiveis, setDiasDisponiveis] = useState([]);
 
+  // Adicionado o campo whatsapp no estado inicial
   const [formData, setFormData] = useState({
     nome: "",
     idade: "",
     vinculo: "Graduação",
     matricula: "",
+    whatsapp: "",
   });
 
   const [selectedDate, setSelectedDate] = useState(null);
   const [selectedTime, setSelectedTime] = useState(null);
+  const [isWaitlist, setIsWaitlist] = useState(false); // Controle da Lista de Espera
   const [horariosDoDia, setHorariosDoDia] = useState([]);
 
   useEffect(() => {
@@ -63,6 +68,7 @@ export default function Agendamento() {
     if (selectedDate) {
       setHorariosDoDia(planilhaData[selectedDate] || []);
       setSelectedTime(null);
+      setIsWaitlist(false);
     }
   }, [selectedDate, planilhaData]);
 
@@ -80,8 +86,8 @@ export default function Agendamento() {
 
   const avancarPasso = () => {
     if (step === 1) {
-      if (!formData.nome || !formData.idade) {
-        alert("Preencha os campos obrigatórios (Nome e Idade).");
+      if (!formData.nome || !formData.idade || !formData.whatsapp) {
+        alert("Preencha os campos obrigatórios (Nome, Idade e WhatsApp).");
         return;
       }
       if (formData.idade < 16 || formData.idade > 69) {
@@ -89,16 +95,27 @@ export default function Agendamento() {
         return;
       }
     }
+
+    // Alerta de confirmação extra se for lista de espera no passo 2
+    if (step === 2 && isWaitlist) {
+      const confirmaEspera = window.confirm(
+        "Este horário não está mais disponível.\n\nDeseja entrar na LISTA DE ESPERA? Entraremos em contato via WhatsApp caso surja uma vaga."
+      );
+      if (!confirmaEspera) return;
+    }
+
     setStep(step + 1);
   };
 
   const finalizarAgendamento = async () => {
     setEnviando(true);
     
+    // Adicionamos a flag de waitlist para o envio
     const dadosParaEnviar = {
       ...formData,
       data: selectedDate,
-      hora: selectedTime
+      hora: selectedTime,
+      isWaitlist: isWaitlist
     };
 
     try {
@@ -195,6 +212,23 @@ export default function Agendamento() {
                 </div>
 
                 <div>
+                  <label className="block text-sm font-bold text-gray-700 mb-1">WhatsApp (com DDD) *</label>
+                  <div className="relative">
+                    <Phone className="absolute left-3 top-3.5 text-gray-400" size={18} />
+                    <input 
+                      type="tel" 
+                      name="whatsapp"
+                      value={formData.whatsapp}
+                      onChange={handleInputChange}
+                      placeholder="(79) 99999-9999"
+                      className="w-full pl-10 pr-3 py-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-700 bg-gray-50 transition-all"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                <div>
                   <label className="block text-sm font-bold text-gray-700 mb-1">Vínculo com a UFS</label>
                   <select 
                     name="vinculo"
@@ -208,21 +242,21 @@ export default function Agendamento() {
                     <option value="Comunidade Externa">Comunidade Externa</option>
                   </select>
                 </div>
-              </div>
 
-              {formData.vinculo !== "Comunidade Externa" && (
-                <div className="animate-in fade-in">
-                  <label className="block text-sm font-bold text-gray-700 mb-1">Matrícula / SIAPE (Opcional)</label>
-                  <input 
-                    type="text" 
-                    name="matricula"
-                    value={formData.matricula}
-                    onChange={handleInputChange}
-                    placeholder="Sua matrícula da UFS"
-                    className="w-full p-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-700 bg-gray-50 transition-all"
-                  />
-                </div>
-              )}
+                {formData.vinculo !== "Comunidade Externa" && (
+                  <div className="animate-in fade-in">
+                    <label className="block text-sm font-bold text-gray-700 mb-1">Matrícula / SIAPE (Opcional)</label>
+                    <input 
+                      type="text" 
+                      name="matricula"
+                      value={formData.matricula}
+                      onChange={handleInputChange}
+                      placeholder="Sua matrícula da UFS"
+                      className="w-full p-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-700 bg-gray-50 transition-all"
+                    />
+                  </div>
+                )}
+              </div>
             </div>
 
             <div className="mt-8 flex justify-end">
@@ -285,24 +319,34 @@ export default function Agendamento() {
                         return (
                           <button
                             key={horario.hora}
-                            disabled={lotado}
-                            onClick={() => setSelectedTime(horario.hora)}
+                            onClick={() => {
+                              setSelectedTime(horario.hora);
+                              setIsWaitlist(lotado);
+                            }}
                             className={`p-3 rounded-xl border-2 flex flex-col items-center justify-center transition-all ${
-                              lotado 
-                                ? "border-gray-100 bg-gray-50 text-gray-400 cursor-not-allowed" 
-                                : isSelected
-                                  ? "border-red-700 bg-red-700 text-white shadow-md transform scale-105"
-                                  : "border-gray-200 hover:border-red-400 bg-white text-gray-800"
+                              isSelected
+                                ? (lotado ? "border-yellow-600 bg-yellow-600 text-white shadow-md transform scale-105" : "border-red-700 bg-red-700 text-white shadow-md transform scale-105")
+                                : (lotado ? "border-yellow-200 bg-yellow-50 text-yellow-800 hover:border-yellow-400" : "border-gray-200 hover:border-red-400 bg-white text-gray-800")
                             }`}
                           >
                             <span className="font-black text-lg">{horario.hora}</span>
-                            <span className={`text-xs mt-1 ${isSelected ? "text-red-100" : lotado ? "text-gray-400" : "text-green-600 font-bold"}`}>
-                              {lotado ? "Lotado" : `${vagasRestantes} vaga${vagasRestantes > 1 ? 's' : ''}`}
+                            <span className={`text-xs mt-1 text-center leading-tight ${isSelected ? "text-white opacity-90" : lotado ? "text-yellow-700 font-bold" : "text-green-600 font-bold"}`}>
+                              {lotado ? "Lotado (Espera)" : `${vagasRestantes} vaga${vagasRestantes > 1 ? 's' : ''}`}
                             </span>
                           </button>
                         );
                       })}
                     </div>
+                    
+                    {/* Alerta de Lista de Espera caso selecione um horário lotado */}
+                    {isWaitlist && (
+                       <div className="mt-4 bg-yellow-100 border border-yellow-300 text-yellow-800 p-3 rounded-lg text-sm flex items-start gap-2">
+                         <AlertCircle className="shrink-0 mt-0.5 text-yellow-700" size={18} />
+                         <p>
+                           <strong>Atenção:</strong> Este horário já atingiu o limite de agendamentos. Ao continuar, você será adicionado(a) à <strong>Lista de Espera</strong>.
+                         </p>
+                       </div>
+                    )}
                   </div>
                 )}
               </>
@@ -322,7 +366,9 @@ export default function Agendamento() {
                 className={`font-bold py-3 px-8 rounded-lg shadow-md transition-all flex items-center gap-2 ${
                   !selectedDate || !selectedTime
                     ? "bg-gray-200 text-gray-400 cursor-not-allowed" 
-                    : "bg-red-700 text-white hover:bg-red-800 hover:scale-105 active:scale-95"
+                    : isWaitlist 
+                      ? "bg-yellow-600 text-white hover:bg-yellow-700 hover:scale-105"
+                      : "bg-red-700 text-white hover:bg-red-800 hover:scale-105"
                 }`}
               >
                 Continuar
@@ -339,25 +385,37 @@ export default function Agendamento() {
               <h2 className="text-2xl font-black text-gray-800">Revise seu Agendamento</h2>
             </div>
 
-            <div className="bg-orange-50 border border-orange-200 rounded-xl p-4 flex items-start gap-3 mb-6 text-orange-800 text-sm">
-              <AlertCircle className="shrink-0 mt-0.5" size={20} />
-              <p>
-                Por favor, confira os dados abaixo. Se estiver tudo certo, clique em <strong>"Confirmar Agendamento"</strong> para finalizar sua reserva.
-              </p>
-            </div>
+            {!isWaitlist ? (
+              <div className="bg-orange-50 border border-orange-200 rounded-xl p-4 flex items-start gap-3 mb-6 text-orange-800 text-sm">
+                <AlertCircle className="shrink-0 mt-0.5" size={20} />
+                <p>
+                  Por favor, confira os dados abaixo. Se estiver tudo certo, clique em <strong>"Confirmar Agendamento"</strong> para finalizar sua reserva.
+                </p>
+              </div>
+            ) : (
+              <div className="bg-yellow-100 border border-yellow-300 rounded-xl p-4 flex items-start gap-3 mb-6 text-yellow-900 text-sm">
+                <Clock4 className="shrink-0 mt-0.5 text-yellow-700" size={20} />
+                <p>
+                  Você está prestes a entrar na <strong>LISTA DE ESPERA</strong> para este horário. Nós entraremos em contato com você pelo WhatsApp <strong>{formData.whatsapp}</strong> caso alguém cancele.
+                </p>
+              </div>
+            )}
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 bg-gray-50 p-6 rounded-xl border border-gray-200 mb-8">
+            <div className={`grid grid-cols-1 md:grid-cols-2 gap-6 p-6 rounded-xl border mb-8 ${isWaitlist ? "bg-yellow-50 border-yellow-200" : "bg-gray-50 border-gray-200"}`}>
               <div>
                 <p className="text-xs text-gray-500 uppercase font-bold tracking-wider mb-1">Doador(a)</p>
                 <p className="font-semibold text-gray-800 text-lg">{formData.nome}</p>
                 <p className="text-sm text-gray-600">{formData.idade} anos • {formData.vinculo}</p>
+                <p className="text-sm text-gray-600 mt-1 flex items-center gap-1"><Phone size={14}/> {formData.whatsapp}</p>
                 {formData.matricula && <p className="text-sm text-gray-600">Matrícula: {formData.matricula}</p>}
               </div>
               
               <div className="md:border-l md:border-gray-300 md:pl-6">
-                <p className="text-xs text-gray-500 uppercase font-bold tracking-wider mb-1">Data e Local</p>
+                <p className="text-xs text-gray-500 uppercase font-bold tracking-wider mb-1">
+                  {isWaitlist ? "Data da Espera" : "Data e Local"}
+                </p>
                 <p className="font-semibold text-gray-800 text-lg">{selectedDate}</p>
-                <p className="text-red-700 font-black text-xl">{selectedTime}</p>
+                <p className={`font-black text-xl ${isWaitlist ? "text-yellow-700" : "text-red-700"}`}>{selectedTime}</p>
                 <p className="text-sm text-gray-600 mt-1">Didática 6 - UFS</p>
               </div>
             </div>
@@ -376,15 +434,17 @@ export default function Agendamento() {
                 onClick={finalizarAgendamento}
                 className={`font-bold py-3 px-8 rounded-lg shadow-md transition-all flex items-center gap-2 ${
                   enviando
-                    ? "bg-red-800/70 text-white cursor-not-allowed" 
-                    : "bg-red-700 text-white hover:bg-red-800 hover:scale-105 active:scale-95"
-                }`}
+                    ? "opacity-70 cursor-not-allowed" 
+                    : "hover:scale-105 active:scale-95"
+                } ${isWaitlist ? "bg-yellow-600 text-white hover:bg-yellow-700" : "bg-red-700 text-white hover:bg-red-800"}`}
               >
                 {enviando ? (
                   <>
                     <Loader2 className="animate-spin" size={20} />
                     Processando...
                   </>
+                ) : isWaitlist ? (
+                  "Entrar na Lista de Espera"
                 ) : (
                   "Confirmar Agendamento"
                 )}
@@ -397,13 +457,27 @@ export default function Agendamento() {
         {step === 4 && (
           <div className="animate-in zoom-in-95 duration-500 flex flex-col items-center">
             
+            {/* CABEÇALHO SUCESSO NORMAL VS ESPERA */}
             <div className="bg-white p-8 rounded-t-2xl shadow-xl border-b-2 border-dashed border-gray-200 text-center w-full max-w-lg relative overflow-hidden">
-              <div className="absolute top-0 left-0 w-full h-2 bg-green-500"></div>
-              <CheckCircle className="mx-auto text-green-500 mb-4 mt-2" size={70} />
-              <h2 className="text-3xl font-black text-gray-800 mb-2">Confirmado!</h2>
-              <p className="text-gray-600 mb-2">
-                Obrigado por salvar vidas, <strong className="text-red-700">{formData.nome.split(' ')[0]}</strong>!
-              </p>
+              <div className={`absolute top-0 left-0 w-full h-2 ${isWaitlist ? "bg-yellow-500" : "bg-green-500"}`}></div>
+              
+              {isWaitlist ? (
+                <>
+                  <Clock4 className="mx-auto text-yellow-500 mb-4 mt-2" size={70} />
+                  <h2 className="text-3xl font-black text-gray-800 mb-2">Lista de Espera!</h2>
+                  <p className="text-gray-600 mb-2">
+                    Tudo certo, <strong className="text-yellow-700">{formData.nome.split(' ')[0]}</strong>. Você está na nossa lista de reserva.
+                  </p>
+                </>
+              ) : (
+                <>
+                  <CheckCircle className="mx-auto text-green-500 mb-4 mt-2" size={70} />
+                  <h2 className="text-3xl font-black text-gray-800 mb-2">Confirmado!</h2>
+                  <p className="text-gray-600 mb-2">
+                    Obrigado por salvar vidas, <strong className="text-red-700">{formData.nome.split(' ')[0]}</strong>!
+                  </p>
+                </>
+              )}
             </div>
 
             <div 
@@ -412,7 +486,9 @@ export default function Agendamento() {
             >
               <div className="text-center border-b pb-6 mb-6">
                 <h3 className="uppercase tracking-widest text-red-800 font-black text-xl mb-1">O Amor Está na Veia</h3>
-                <p className="text-xs text-gray-400 font-semibold uppercase">Comprovante de Agendamento</p>
+                <p className="text-xs text-gray-400 font-semibold uppercase">
+                  {isWaitlist ? "Comprovante de Espera" : "Comprovante de Agendamento"}
+                </p>
               </div>
 
               <div className="space-y-4">
@@ -428,19 +504,25 @@ export default function Agendamento() {
                   </div>
                   <div>
                     <p className="text-xs text-gray-400 uppercase font-bold tracking-wider">Horário</p>
-                    <p className="font-black text-red-700 text-xl">{selectedTime}</p>
+                    <p className={`font-black text-xl ${isWaitlist ? "text-yellow-600" : "text-red-700"}`}>{selectedTime}</p>
                   </div>
                 </div>
 
                 <div>
-                  <p className="text-xs text-gray-400 uppercase font-bold tracking-wider">Local de Apresentação</p>
+                  <p className="text-xs text-gray-400 uppercase font-bold tracking-wider">Local da Campanha</p>
                   <p className="font-bold text-gray-800">Didática 6 - Universidade Federal de Sergipe (UFS)</p>
                 </div>
 
                 <div className="bg-gray-50 border border-gray-100 p-4 rounded-lg mt-4">
-                  <p className="text-xs text-gray-500 leading-relaxed font-medium text-center">
-                    Tire um print desta tela para apresentar junto com um <strong>documento oficial com foto</strong> no dia da doação.
-                  </p>
+                  {isWaitlist ? (
+                    <p className="text-xs text-gray-600 leading-relaxed font-medium text-center">
+                      Fique de olho no seu <strong>WhatsApp</strong>. Entraremos em contato caso surja uma vaga neste dia e horário!
+                    </p>
+                  ) : (
+                    <p className="text-xs text-gray-500 leading-relaxed font-medium text-center">
+                      Tire um print desta tela para apresentar junto com um <strong>documento oficial com foto</strong> no dia da doação.
+                    </p>
+                  )}
                 </div>
               </div>
             </div>
