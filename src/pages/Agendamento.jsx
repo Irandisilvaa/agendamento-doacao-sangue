@@ -405,7 +405,7 @@ export default function Agendamento() {
               <div>
                 <p className="text-xs text-gray-500 uppercase font-bold tracking-wider mb-1">Doador(a)</p>
                 <p className="font-semibold text-gray-800 text-lg">{formData.nome}</p>
-                <p className="text-sm text-gray-600">{formData.idade} anos • {formData.vinculo}</p>
+                <p className="text-sm text-gray-600">{formData.idade} vagas • {formData.vinculo}</p>
                 <p className="text-sm text-gray-600 mt-1 flex items-center gap-1"><Phone size={14}/> {formData.whatsapp}</p>
                 {formData.matricula && <p className="text-sm text-gray-600">Matrícula: {formData.matricula}</p>}
               </div>
