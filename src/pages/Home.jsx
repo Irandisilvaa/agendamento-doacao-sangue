@@ -438,7 +438,7 @@ export default function Home() {
                 levando o Hemose até a UFS e mobilizando estudantes, servidores e a população do entorno em favor da vida.
               </p>
               <p className="border-t border-white/10 pt-4 text-white font-medium">
-                Em 2026, a campanha celebra sua sua 10ª edição, reafirmando seu compromisso com a 
+                Em 2026, a campanha celebra sua 10ª edição, reafirmando seu compromisso com a 
                 promção da doação voluntária, em alusão ao Dia Mundial do Doador de Sangue (14/06).
               </p>
             </div>
