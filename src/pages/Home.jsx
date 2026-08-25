@@ -286,7 +286,7 @@ export default function Home() {
                 Já fez a sua Tipagem Sanguínea?
               </h2>
               <p className="text-gray-600 md:text-lg max-w-xl">
-                Se você já participou da coleta, a sua <b>Carteirinha Exclusiva de Doador</b> já está pronta! Baixe agora mesmo em formato PDF.
+                Se você já participou da coleta, a sua <b>Carteirinha</b> já está pronta! Baixe agora mesmo em formato PDF.
               </p>
             </div>
           </div>

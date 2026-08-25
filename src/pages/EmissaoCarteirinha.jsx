@@ -158,7 +158,7 @@ export default function EmissaoCarteirinha() {
         </div>
 
         <h2>Emitir Carteirinha</h2>
-        <p className="subtitle">Informe seus dados para buscar sua carteirinha exclusiva de doador.</p>
+        <p className="subtitle">Informe seus dados para buscar sua carteirinha.</p>
         
         <form onSubmit={buscarEGerarPDF} className="carteirinha-form">
           <div className="input-group">
