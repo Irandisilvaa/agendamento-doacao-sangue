@@ -10,6 +10,8 @@ import {
   Mail,
   Phone,
   AtSign,
+  IdCard, // <-- Ícone novo
+  Download
 } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 
@@ -262,8 +264,44 @@ export default function Home() {
             </span>
           </button>
         </div>
-      </section>
 
+      </section>
+          {/* =========================================
+          BANNER CHAMATIVO DA CARTEIRINHA
+          ========================================= */}
+      <section className="bg-gradient-to-r from-red-50 to-white border-y border-red-100 py-12 px-6 md:px-12 relative overflow-hidden">
+        {/* Ícone gigante de fundo para dar charme */}
+        <Droplet className="absolute -right-16 -top-10 text-red-100 w-80 h-80 opacity-40 rotate-12 pointer-events-none" />
+        
+        <div className="max-w-5xl mx-auto flex flex-col md:flex-row items-center justify-between gap-8 relative z-10">
+          
+          <div className="flex flex-col md:flex-row items-center md:items-start gap-6 text-center md:text-left">
+            {/* Ícone com animação de pulso */}
+            <div className="w-20 h-20 bg-gradient-to-br from-red-600 to-red-800 rounded-full flex items-center justify-center shrink-0 shadow-lg shadow-red-800/30 animate-[bounce_3s_infinite]">
+              <IdCard className="text-white w-10 h-10" />
+            </div>
+            
+            <div className="mt-2 md:mt-0">
+              <h2 className="text-2xl md:text-3xl font-black text-red-800 uppercase tracking-tight mb-2">
+                Já fez a sua Tipagem Sanguínea?
+              </h2>
+              <p className="text-gray-600 md:text-lg max-w-xl">
+                Se você já participou da coleta, a sua <b>Carteirinha Exclusiva de Doador</b> já está pronta! Baixe agora mesmo em formato PDF.
+              </p>
+            </div>
+          </div>
+
+          <button
+            onClick={() => navigate("/carteirinha")}
+            className="group bg-red-700 text-white font-bold text-lg py-4 px-8 rounded-full shadow-xl hover:bg-red-800 hover:shadow-red-800/40 hover:scale-105 active:scale-95 transition-all duration-300 flex items-center gap-3 shrink-0"
+          >
+            <Download size={24} className="group-hover:-translate-y-1 transition-transform duration-300" />
+            BAIXAR CARTEIRINHA
+          </button>
+
+        </div>
+      </section>
+      {/* ========================================= */}
       {/* FAQ*/}
       <section
         id="perguntas"
