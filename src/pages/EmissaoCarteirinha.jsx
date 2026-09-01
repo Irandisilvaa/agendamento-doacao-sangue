@@ -11,6 +11,7 @@ export default function EmissaoCarteirinha() {
 
   const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwnHnVhUX33mmsnUIqdFBBfAjBxGHRjn9qt5OIQPES9iYv8aWPTlxh2tTcDZJt9RFU7/exec';
 
+  // Máscara de Telefone: (XX) 9XXXX-XXXX
   const handleTelefoneChange = (e) => {
     let value = e.target.value.replace(/\D/g, ''); 
     
@@ -77,14 +78,17 @@ export default function EmissaoCarteirinha() {
     const pages = pdfDoc.getPages();
     const firstPage = pages[0];
 
-    const escreverCentralizado = (texto, centroX, yInicial, tamanho, cor = rgb(0, 0, 0), larguraMaxima = null, limiteX = null) => {
+    // ==========================================
+    // FUNÇÃO ATUALIZADA: ALINHA O TEXTO À ESQUERDA
+    // ==========================================
+    const escreverTexto = (texto, centroX, yInicial, tamanho, cor = rgb(0, 0, 0), larguraMaxima = null, limiteX = null) => {
       if (!texto) return;
 
       const palavras = texto.split(' ');
       let linhas = [];
       let linhaAtual = '';
 
-      // Quebra o texto em linhas se for maior que a larguraMaxima
+      // 1. Quebra o texto em linhas baseado na largura máxima permitida
       for (let i = 0; i < palavras.length; i++) {
         const testeLinha = linhaAtual === '' ? palavras[i] : linhaAtual + ' ' + palavras[i];
         const larguraTeste = helveticaBold.widthOfTextAtSize(testeLinha, tamanho);
@@ -103,22 +107,32 @@ export default function EmissaoCarteirinha() {
       const alturaLinha = tamanho * 1.2;
       let yAtual = yInicial;
 
-      // Ajusta o Y para cima caso o texto tenha sido quebrado em mais de uma linha
+      // Ajusta o Y inicial para cima se houver mais de uma linha, para não descer demais
       if (linhas.length > 1) {
         yAtual += (alturaLinha * (linhas.length - 1)) / 2;
       }
 
+      // 2. Encontra a maior largura entre as linhas para definir o alinhamento à esquerda
+      let maxLarguraLinha = 0;
       linhas.forEach((linha) => {
-        const larguraLinha = helveticaBold.widthOfTextAtSize(linha, tamanho);
-        let posX = centroX - (larguraLinha / 2);
-
-        // TRAVA DE SEGURANÇA: Se o texto tentar passar do limite X, puxa ele para trás
-        if (limiteX && (posX + larguraLinha) > limiteX) {
-          posX = limiteX - larguraLinha;
+        const largura = helveticaBold.widthOfTextAtSize(linha, tamanho);
+        if (largura > maxLarguraLinha) {
+          maxLarguraLinha = largura;
         }
+      });
 
+      // 3. Define a posição X inicial em que TODAS as linhas vão começar (Justificado à esquerda do bloco)
+      let posXInicial = centroX - (maxLarguraLinha / 2);
+
+      // Trava de segurança: impede que a linha passe do limite máximo no eixo X do PDF
+      if (limiteX && (posXInicial + maxLarguraLinha) > limiteX) {
+        posXInicial = limiteX - maxLarguraLinha;
+      }
+
+      // 4. Desenha as linhas no PDF (repare que todas usam o mesmo posXInicial)
+      linhas.forEach((linha) => {
         firstPage.drawText(linha, {
-          x: posX,
+          x: posXInicial, 
           y: yAtual,
           size: tamanho,
           font: helveticaBold,
@@ -128,16 +142,22 @@ export default function EmissaoCarteirinha() {
       });
     };
 
+    // ==========================================
+    // COORDENADAS 
+    // ==========================================
+    
+    // Nome: Quebra a linha e alinha todas as quebras à esquerda
+    escreverTexto(dadosUsuario.nome, 620, 390, 15, rgb(0, 0, 0), 280, 700); 
 
-    escreverCentralizado(dadosUsuario.nome, 620, 390, 15, rgb(0, 0, 0), 280, 700); 
+    // Código
+    escreverTexto(dadosUsuario.codigo, 493, 340, 16); 
 
-    escreverCentralizado(dadosUsuario.codigo, 493, 340, 16); 
-
-    escreverCentralizado(dadosUsuario.data_coleta, 660, 340, 16); 
+    // Data
+    escreverTexto(dadosUsuario.data_coleta, 660, 340, 16); 
 
     // Tipo Sanguíneo DENTRO da gota
     if(dadosUsuario.tipo_sanguineo) {
-       escreverCentralizado(dadosUsuario.tipo_sanguineo, 295, 315, 45, rgb(1, 1, 1)); 
+       escreverTexto(dadosUsuario.tipo_sanguineo, 295, 330, 45, rgb(1, 1, 1)); 
     }
 
     // Salva e faz o Download
